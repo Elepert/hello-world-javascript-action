@@ -7,6 +7,9 @@ This file is similar to the format suggested by [Keep a CHANGELOG](https://githu
 
 ## Unreleased
 
+- [Feature] test2 in **Dropdown** ([#2](https://github.com/Elepert/hello-world-javascript-action/pull/2))
+- [Feature] test2 in **Dropdown** ([#2](https://github.com/Elepert/hello-world-javascript-action/pull/2))
+
 ## 47.0.0 - 2020-08-07
 - [Release] Remove `word-break` helper class in favor of `word-break--all` ([#1394](https://github.com/optimizely/oui/pull/1394))
 - [Feature] Add `hasClearButton` to **DatePicker** and **DateRangePicker** ([#1396](https://github.com/optimizely/oui/pull/1396))
