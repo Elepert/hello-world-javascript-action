@@ -6,6 +6,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 This file is similar to the format suggested by [Keep a CHANGELOG](https://github.com/olivierlacan/keep-a-changelog).
 
 ## Unreleased
+- [Patch] Add `hasClearButton` to **DatePicker** and **DateRangePicker**  ([#3](https://github.com/Elepert/hello-world-javascript-action/pull/3))
+- [Feature] Add `hasClearButton` to **DatePicker** and **DateRangePicker** ([#1396](https://github.com/optimizely/oui/pull/1396))
 
 ## 47.0.0 - 2020-08-07
 - [Release] Remove `word-break` helper class in favor of `word-break--all` ([#1394](https://github.com/optimizely/oui/pull/1394))
