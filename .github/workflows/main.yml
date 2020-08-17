@@ -1,7 +1,4 @@
-on: 
-  pull_request:
-  issue_comment:
-    types: [created, edited]
+on: [pull_request, issue_comment]
 
 jobs:
   update_changelog_job:
