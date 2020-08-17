@@ -9,12 +9,17 @@ jobs:
     steps:
       # To use this repository's private action,
       # you must check out the repository
+      - uses: ./actions/checkoutBranch/
+        id: comment-branch
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Checkout
         uses: actions/checkout@v2
+        if: success()
         with:
-          ref: ${{ github.ref }}
+          ref: ${{ steps.comment-branch.outputs.ref }}
       - name: Update changelog
-        uses: ./actions/ # Uses an action in the root directory
+        uses: ./actions/changelogEdit/ # Uses an action in the root directory
         id: update
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
