@@ -39,7 +39,7 @@ async function main() {
     let full_name;
 
     // if action was triggered by pull_request (creating/editing PR)
-    if (payload.action === "synchronize") {
+    if (payload.action === "synchronize" || payload.action === "opened") {
       // Get PR information
       prBody = payload.pull_request.body;
       prLink = payload.pull_request.html_url;
