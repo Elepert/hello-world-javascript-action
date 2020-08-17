@@ -8,7 +8,7 @@ jobs:
     name: Update CHANGELOG.md
     steps:
       # To use this repository's private action,
-      # you must check out the repository
+      # you must check out the repository 
       - name: Clone git repo
         uses: actions/checkout@v2
       - name: Checkout Pull Request
