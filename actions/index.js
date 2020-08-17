@@ -32,17 +32,38 @@ async function main() {
     } = github.context;
     const payload2 = JSON.stringify(payload, undefined, 2)
     console.log(`The event payload: ${payload2}`);
-    // Get PR information
-    let prBody = payload.pull_request.body;
-    const prLink = payload.pull_request.html_url;
-    const prNum = payload.pull_request.number;
 
-    if (!payload.pull_request.head.repo) {
-      core.info('unable to determine repository from request type');
-      core.setOutput("success", false);
-      return;
+    let prBody;
+    let prLink;
+    let prNum;
+    let full_name;
+
+    // if action was triggered by pull_request (creating/editing PR)
+    if (payload.action === "synchronize") {
+      // Get PR information
+      prBody = payload.pull_request.body;
+      prLink = payload.pull_request.html_url;
+      prNum = payload.pull_request.number;
+
+      if (!payload.pull_request.head.repo) {
+        core.info('unable to determine repository from request type');
+        core.setOutput("success", false);
+        return;
+      }
+      full_name = payload.pull_request.head.repo.full_name;
+    // if action was triggered by issue_comment (commenting on PR)
+    } else {
+      prBody = payload.comment.body;
+      prLink = payload.issue.html_url;
+      prNum = payload.issue.number;
+
+      if (!payload.repository) {
+        core.info('unable to determine repository from request type');
+        core.setOutput("success", false);
+        return;
+      }
+      full_name = payload.repository.full_name;
     }
-    const full_name = payload.pull_request.head.repo.full_name;
     const [owner, repo] = full_name.split('/');
 
     const repoToken = process.env['GITHUB_TOKEN'];
@@ -60,7 +81,11 @@ async function main() {
     const changelogLocation = feature !== -1 ? feature :
       (patch !== -1 ? patch : release)
 
+    // output variable defining whether action should add/commit changelog.md
+    // don't want to commit if no files are edited bc will cause an error
     let foundline = true;
+
+    // will we add a comment to the PR thread?
     let pushComment = true;
     let commentMessage = ":warning: No Changelog line provided, please update the `Changelog Entry` section of the PR comment. Describe in one line your changes, like so: [Feature] Updated **ComponentName** with new `propName` to fix alignment ";
     
