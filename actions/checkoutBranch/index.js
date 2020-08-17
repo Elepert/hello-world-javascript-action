@@ -1,7 +1,8 @@
-import { getInput, setFailed, setOutput } from "@actions/core";
-import { context, getOctokit } from "@actions/github";
 
-export async function run() {
+const { getInput, setFailed, setOutput } = require("@actions/core");
+const { context, getOctokit } = require("@actions/github");
+
+async function main() {
   try {
     const client = getOctokit(getInput("repo_token", { required: true }));
 
@@ -26,5 +27,3 @@ export async function run() {
     throw error;
   }
 }
-
-run();
