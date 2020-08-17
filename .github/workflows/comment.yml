@@ -1,0 +1,36 @@
+on: 
+  issue_comment:
+
+jobs:
+  update_changelog_job:
+    runs-on: ubuntu-latest
+    name: Update CHANGELOG.md
+    steps:
+      # To use this repository's private action,
+      # you must check out the repository 
+      - name: Clone git repo
+        uses: actions/checkout@v2
+      - name: Checkout Pull Request
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          PR_URL="${{ github.event.issue.pull_request.url }}"
+          PR_NUM=${PR_URL##*/}
+          echo "Checking out from PR #$PR_NUM based on URL: $PR_URL"
+          hub pr checkout $PR_NUM
+      - name: Configure Git Agent
+        run: |
+          git config --global user.name 'Changelog Bot'
+          git config --global user.email 'changelog-bot@users.noreply.github.com'
+      - name: Update changelog
+        uses: ./actions/changelogEdit/ # Uses an action in the root directory
+        id: update
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Commit changelog
+        if: steps.update.outputs.success == 'true'
+        run: |
+          git add CHANGELOG.md
+          git commit -am "Updated CHANGELOG.MD"
+          git push
+            
