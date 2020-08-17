@@ -1,5 +1,5 @@
 
-const { getInput, setFailed, setOutput } = require("@actions/core");
+const { setFailed, setOutput } = require("@actions/core");
 const { context, getOctokit } = require("@actions/github");
 
 async function main() {
