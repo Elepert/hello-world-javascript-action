@@ -6,6 +6,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 This file is similar to the format suggested by [Keep a CHANGELOG](https://github.com/olivierlacan/keep-a-changelog).
 
 ## Unreleased
+- [Feature] test line 2 ([#6](https://github.com/Elepert/hello-world-javascript-action/pull/6))
 - [Patch] Test line ([#6](https://github.com/Elepert/hello-world-javascript-action/pull/6))
 - [Patch] Make it this line ([#5](https://github.com/Elepert/hello-world-javascript-action/pull/5))
 - [Release] Updated changelog file with `propsName` for **ComponentName** ([#4](https://github.com/Elepert/hello-world-javascript-action/pull/4))
