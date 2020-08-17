@@ -1,12 +1,9 @@
 const core = require('@actions/core');
 const github = require('@actions/github');
 const {promisify} = require('util');
-const { appendFile, exists, writeFile, stat, readFileSync, write } = require("fs");
+const { writeFile, readFileSync } = require("fs");
 
-const appendFileAsync = promisify(appendFile);
-const existsAsync = promisify(exists);
 const writeFileAsync = promisify(writeFile);
-const statAsync = promisify(stat);
 
 main().catch((error) => setFailed(error.message));
 
@@ -65,6 +62,7 @@ async function main() {
     let pushComment = true;
     let commentMessage = ":warning: No Changelog line provided, please update the `Changelog Entry` section of the PR comment. Describe in one line your changes, like so: [Feature] Updated **ComponentName** with new `propName` to fix alignment ";
     
+    // Get past prComments to check if this latest one will be a duplicate of the last one
     const prComments = await octokit.issues.listComments({
       owner,
       repo,
@@ -75,14 +73,14 @@ async function main() {
     if (prComments.data.length > 0) {
       lastComment = prComments.data.pop().body;
     } 
-    // if not present quit action
+
+    // if changelog line isn't present in the pr comment
     if (changelogLocation === -1) {
       if (lastComment === commentMessage ) {
         pushComment = false;
       }
       foundline = false;
     } else {
-
       // Get the changelog line
       const changelogKey = feature !== -1 ? '[Feature]' :
       (patch !== -1 ? '[Patch]' : '[Release]')
@@ -93,6 +91,8 @@ async function main() {
       let changelogLine = "- ";
       changelogLine = changelogLine.concat(changelogKey, prSplit, " ([#", prNum, '](', prLink, "))");
 
+      // check that this changelogLine isn't the same as the last comment's
+      // if so, don't bother with a new comment
       if (lastComment.indexOf('```') !== -1) {
         lastComment = lastComment.split("```\n")[1];
         lastComment = lastComment.split("\n```")[0];
@@ -100,8 +100,10 @@ async function main() {
       }
 
       await writeToFile(changelogLine);
+
       commentMessage= ":tada:  Updated the Unreleased section of the Changelog with: \n```\n".concat(changelogLine, "\n```");
     }
+    // if we do want to write a new comment
     if (pushComment) {
       await octokit.issues.createComment({
         owner,
@@ -110,6 +112,7 @@ async function main() {
         body: commentMessage,
       })
     }
+    // determines if the next action will run (add, commit, and push changelog.md)
     core.setOutput("success", foundline);
   } catch (error) {
     core.setFailed(error.message);

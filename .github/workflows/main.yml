@@ -1,7 +1,7 @@
 on: 
   pull_request:
   issue_comment:
-    types: [edited]
+    types: [created, edited]
 
 jobs:
   update_changelog_job:
@@ -19,8 +19,6 @@ jobs:
         id: update
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: debuggin
-        run: echo ${{ steps.update.outputs.success }}
       - name: Commit changelog
         if: steps.update.outputs.success == 'true'
         run: |
