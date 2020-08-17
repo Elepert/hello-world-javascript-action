@@ -4,7 +4,7 @@ const { context, getOctokit } = require("@actions/github");
 
 async function main() {
   try {
-    const client = getOctokit(getInput("repo_token", { required: true }));
+    const client = getOctokit(process.env['GITHUB_TOKEN']);
 
     const { data: { pull_request } } = await client.issues.get({
       ...context.repo,
