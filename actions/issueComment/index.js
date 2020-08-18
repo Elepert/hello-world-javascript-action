@@ -119,7 +119,7 @@ async function main() {
 
       // Parse through the prBody to find insertion point
       console.log("prBody",prBody);
-      const splitBody = prBody.split("## Changelog Entry\n");
+      const splitBody = prBody.split("## Changelog Entry");
       console.log("splitBody 0", splitBody[0])
       let newBody = `${splitBody[0]}## Changelog Entry\n`;
 
