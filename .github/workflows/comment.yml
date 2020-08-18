@@ -1,5 +1,6 @@
 on: 
   issue_comment:
+    types: created
 
 jobs:
   update_changelog_job:
@@ -23,7 +24,7 @@ jobs:
           git config --global user.name 'Changelog Bot'
           git config --global user.email 'changelog-bot@users.noreply.github.com'
       - name: Update changelog
-        uses: ./actions/changelogEdit/ # Uses an action in the root directory
+        uses: ./actions/issueComment/ # Uses an action in the root directory
         id: update
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
