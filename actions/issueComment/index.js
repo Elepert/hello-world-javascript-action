@@ -36,8 +36,8 @@ async function main() {
       return;
     }
 
-    const payload2 = JSON.stringify(payload, undefined, 2)
-    console.log(`The event payload: ${payload2}`);
+    // const payload2 = JSON.stringify(payload, undefined, 2)
+    // console.log(`The event payload: ${payload2}`);
 
     let prBody = payload.issue.body;
 
@@ -118,7 +118,9 @@ async function main() {
       commentMessage= ":tada:  Updated the Unreleased section of the Changelog with: \n```\n".concat(changelogLine, "\n```");
 
       // Parse through the prBody to find insertion point
+      console.log("prBody",prBody);
       const splitBody = prBody.split("## Changelog Entry\n");
+      console.log("splitBody 0", splitBody[0])
       let newBody = `${splitBody[0]}## Changelog Entry\n`;
 
       // add the the changelogline
