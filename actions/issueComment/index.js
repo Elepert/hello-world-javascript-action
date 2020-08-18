@@ -25,7 +25,7 @@ async function writeToFile(changelogLine) {
   await writeFileAsync(path, finalContents);
 }
 
-async function writeToPRBody(prBody, changelogLine, octokit) {
+async function writeToPRBody(prBody, changelogLine, octokit, owner, repo, prNum) {
   let splitBody;
   let newBody
 
@@ -149,7 +149,7 @@ async function main() {
 
       commentMessage= ":tada:  Updated the Unreleased section of the Changelog with: \n```\n".concat(changelogLine, "\n```");
 
-      await writeToPRBody(prBody, changelogLine, octokit);
+      await writeToPRBody(prBody, changelogLine, octokit, owner, repo, prNum);
     }
     // if we do want to write a new comment
     if (pushComment) {
