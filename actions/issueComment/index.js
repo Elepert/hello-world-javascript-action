@@ -39,9 +39,6 @@ async function main() {
     const payload2 = JSON.stringify(payload, undefined, 2)
     console.log(`The event payload: ${payload2}`);
 
-    // will we need to upate the Pr body
-    let updatePrBody = true;
-
     let prBody = payload.issue.body;
 
     // get info from the payload
@@ -97,7 +94,6 @@ async function main() {
         pushComment = false;
       }
       foundline = false;
-      updatePrBody = false;
     } else {
       // Get the changelog line
       const changelogKey = feature !== -1 ? '[Feature]' :
@@ -120,6 +116,23 @@ async function main() {
       await writeToFile(changelogLine);
 
       commentMessage= ":tada:  Updated the Unreleased section of the Changelog with: \n```\n".concat(changelogLine, "\n```");
+
+      // Parse through the prBody to find insertion point
+      const splitBody = prBody.split("## Changelog Entry\n");
+      let newBody = `${splitBody[0]}## Changelog Entry\n`;
+
+      // add the the changelogline
+      newBody += changelogLine;
+      newBody += "\n";
+      newBody += splitFile[1];
+
+      // edit the prbody
+      await octokit.pulls.update({
+        owner,
+        repo,
+        'pull_number': prNum,
+        body: newBody,
+      });
     }
     // if we do want to write a new comment
     if (pushComment) {
@@ -131,24 +144,6 @@ async function main() {
       })
     }
 
-    // if we do want to update the pr body
-    if (updatePrBody) {
-      // Parse through the prBody to find insertion point
-      const splitBody = prBody.split("## Changelog Entry\n");
-      let newBody = `${splitBody[0]}## Changelog Entry\n`;
-
-      // add the the changelogline
-      newBody += changelogLine;
-      newBody += "\n";
-      newBody += splitFile[1];
-
-      await octokit.pulls.update({
-        owner,
-        repo,
-        'pull_number': prNum,
-        body: newBody,
-      });
-    }
     // determines if the next action will run (add, commit, and push changelog.md)
     core.setOutput("success", foundline);
   } catch (error) {
