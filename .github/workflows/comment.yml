@@ -1,3 +1,4 @@
+# defines trigger for action
 on: 
   issue_comment:
     types: created
@@ -11,6 +12,8 @@ jobs:
       # you must check out the repository 
       - name: Clone git repo
         uses: actions/checkout@v2
+      # issue_comment actions run on the default branch (devel) and not the PR branch
+      # check out the PR branch before starting
       - name: Checkout Pull Request
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

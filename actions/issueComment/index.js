@@ -25,6 +25,41 @@ async function writeToFile(changelogLine) {
   await writeFileAsync(path, finalContents);
 }
 
+async function writeToPRBody(prBody, changelogLine, octokit) {
+  let splitBody;
+  let newBody
+
+  // Parse through the prBody to find insertion point
+  if (prBody.indexOf('-->') !== -1) {
+    splitBody = prBody.split("-->");
+    newBody = `${splitBody[0]}-->\n`;
+  } else {
+    splitBody = prBody.split("## Changelog Entry");
+    newBody = `${splitBody[0]}## Changelog Entry\n\n`;
+  }
+  // add the the changelogline
+  newBody += changelogLine;
+  newBody += "\n";
+
+  // remove anything that might have already been under the changelog section
+  if (splitBody[1].indexOf("## Test Plan") !== -1) {
+    splitBody = splitBody[1].split("## Test Plan");
+    newBody += "\n## Test Plan"
+  } else if (splitBody[1].indexOf("## Jira") !== -1) {
+    splitBody = splitBody[1].split("## Jira");
+    newBody += "\n## Jira"
+  }
+  newBody += splitBody[1];
+
+  // edit the prbody
+  await octokit.pulls.update({
+    owner,
+    repo,
+    'pull_number': prNum,
+    body: newBody,
+  });
+}
+
 async function main() {
   try {
     const {
@@ -35,9 +70,6 @@ async function main() {
       core.setOutput("success", false);
       return;
     }
-
-    // const payload2 = JSON.stringify(payload, undefined, 2)
-    // console.log(`The event payload: ${payload2}`);
 
     let prBody = payload.issue.body;
 
@@ -64,7 +96,7 @@ async function main() {
     const patch = commentBody.indexOf('[Patch]'); 
     const release = commentBody.indexOf('[Release]');
 
-    // get the loaction of the start of the line in the string
+    // get the location of the start of the line in the string
     const changelogLocation = feature !== -1 ? feature :
       (patch !== -1 ? patch : release)
 
@@ -74,7 +106,7 @@ async function main() {
 
     // will we add a comment to the PR thread?
     let pushComment = true;
-    let commentMessage = ":warning: No Changelog line provided, please update the `Changelog Entry` section of the PR comment. Describe in one line your changes, like so: [Feature] Updated **ComponentName** with new `propName` to fix alignment ";
+    let commentMessage = ":warning: No Changelog line provided. To add to the Changelog, please comment on this PR, and describe in one line your changes, like so: [Feature] Updated **ComponentName** with new `propName` to fix alignment ";
     
     // Get past prComments to check if this latest one will be a duplicate of the last one
     const prComments = await octokit.issues.listComments({
@@ -117,38 +149,7 @@ async function main() {
 
       commentMessage= ":tada:  Updated the Unreleased section of the Changelog with: \n```\n".concat(changelogLine, "\n```");
 
-      // Parse out the explanation comment if necessary
-      let splitBody;
-      let newBody
-      if (prBody.indexOf('-->') !== -1) {
-        splitBody = prBody.split("-->");
-        newBody = `${splitBody[0]}-->\n`;
-      } else {
-        // Parse through the prBody to find insertion point
-        splitBody = prBody.split("## Changelog Entry");
-        newBody = `${splitBody[0]}## Changelog Entry\n\n`;
-      }
-      // add the the changelogline
-      newBody += "- " + changelogKey + prSplit;
-      newBody += "\n";
-
-      // remove anything that might have already been under the changelog section
-      if (splitBody[1].indexOf("## Test Plan") !== -1) {
-        splitBody = splitBody[1].split("## Test Plan");
-        newBody += "\n## Test Plan"
-      } else if (splitBody[1].indexOf("## Jira") !== -1) {
-        splitBody = splitBody[1].split("## Jira");
-        newBody += "\n## Jira"
-      }
-      newBody += splitBody[1];
-
-      // edit the prbody
-      await octokit.pulls.update({
-        owner,
-        repo,
-        'pull_number': prNum,
-        body: newBody,
-      });
+      await writeToPRBody(prBody, changelogLine, octokit);
     }
     // if we do want to write a new comment
     if (pushComment) {
