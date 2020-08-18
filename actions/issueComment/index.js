@@ -129,8 +129,17 @@ async function main() {
         newBody = `${splitBody[0]}## Changelog Entry\n\n`;
       }
       // add the the changelogline
-      newBody += changelogKey + prSplit;
+      newBody += "- " + changelogKey + prSplit;
       newBody += "\n";
+
+      // remove anything that might have already been under the changelog section
+      if (splitBody[1].indexOf("## Test Plan") !== -1) {
+        splitBody = splitBody[1].split("## Test Plan");
+        newBody += "\n## Test Plan"
+      } else if (splitBody[1].indexOf("## Jira") !== -1) {
+        splitBody = splitBody[1].split("## Jira");
+        newBody += "\n## Jira"
+      }
       newBody += splitBody[1];
 
       // edit the prbody
