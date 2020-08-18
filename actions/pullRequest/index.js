@@ -107,7 +107,7 @@ async function main() {
 
       await writeToFile(changelogLine);
 
-      commentMessage= ":tada:  Updated the Unreleased section of the Changelog with: \n```\n".concat(changelogLine, "\n```");
+      commentMessage= ":tada:  Updated the Unreleased section of the Changelog with: \n```\n".concat(changelogLine, "\n```\nTo update this entry, please comment on this PR, and describe in one line your changes, like so: [Feature] Updated **ComponentName** with new `propName` to fix alignment ");
     }
     // if we do want to write a new comment
     if (pushComment) {
