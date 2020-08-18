@@ -117,12 +117,17 @@ async function main() {
 
       commentMessage= ":tada:  Updated the Unreleased section of the Changelog with: \n```\n".concat(changelogLine, "\n```");
 
-      // Parse through the prBody to find insertion point
-      console.log("prBody",prBody);
-      const splitBody = prBody.split("## Changelog Entry");
-      console.log("splitBody 0", splitBody[0])
-      let newBody = `${splitBody[0]}## Changelog Entry\n`;
-
+      // Parse out the explanation comment if necessary
+      let splitBody;
+      let newBody
+      if (prBody.indexOf('-->') !== -1) {
+        splitBody = prBody.split("-->");
+        newBody = `${splitBody[0]}-->\n`;
+      } else {
+        // Parse through the prBody to find insertion point
+        splitBody = prBody.split("## Changelog Entry");
+        newBody = `${splitBody[0]}## Changelog Entry\n\n`;
+      }
       // add the the changelogline
       newBody += changelogLine;
       newBody += "\n";
