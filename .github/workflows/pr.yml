@@ -10,6 +10,8 @@ jobs:
       # you must check out the repository 
       - name: Clone git repo
         uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
       - name: Configure Git Agent
         run: |
           git config --global user.name 'Changelog Bot'

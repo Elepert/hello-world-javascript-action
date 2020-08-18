@@ -129,7 +129,7 @@ async function main() {
         newBody = `${splitBody[0]}## Changelog Entry\n\n`;
       }
       // add the the changelogline
-      newBody += changelogLine;
+      newBody += changelogKey + prSplit;
       newBody += "\n";
       newBody += splitBody[1];
 
