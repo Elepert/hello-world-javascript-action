@@ -124,7 +124,7 @@ async function main() {
       // add the the changelogline
       newBody += changelogLine;
       newBody += "\n";
-      newBody += splitFile[1];
+      newBody += splitBody[1];
 
       // edit the prbody
       await octokit.pulls.update({
