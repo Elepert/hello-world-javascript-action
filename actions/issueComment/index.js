@@ -151,7 +151,7 @@ async function main() {
 
       commentMessage= ":tada:  Updated the Unreleased section of the Changelog with: \n```\n".concat(changelogLine, "\n```\nTo update this entry, please comment on this PR, and describe in one line your changes, like so: [Feature] Updated **ComponentName** with new `propName` to fix alignment ");
 
-      await writeToPRBody(prBody, changelogLine, octokit, owner, repo, prNum);
+      await writeToPRBody(prBody, changelogKey+prSplit, octokit, owner, repo, prNum);
     }
     // if we do want to write a new comment
     if (pushComment) {
