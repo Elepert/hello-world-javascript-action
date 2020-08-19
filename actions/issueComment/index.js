@@ -24,7 +24,9 @@ async function writeToFile(changelogLine) {
 
     // write to file
     await writeFileAsync(path, finalContents);
+    return true;
   }
+  return false;
 }
 
 async function writeToPRBody(prBody, changelogLine, octokit, owner, repo, prNum) {
@@ -104,7 +106,7 @@ async function main() {
 
     // output variable defining whether action should add/commit changelog.md
     // don't want to commit if no files are edited bc will cause an error
-    let foundline = true;
+    let success = true;
 
     // will we add a comment to the PR thread?
     let pushComment = true;
@@ -127,7 +129,7 @@ async function main() {
       if (lastComment === commentMessage ) {
         pushComment = false;
       }
-      foundline = false;
+      success = false;
     } else {
       // Get the changelog line
       const changelogKey = feature !== -1 ? '[Feature]' :
@@ -147,7 +149,7 @@ async function main() {
         if (lastComment === changelogLine) { pushComment= false}
       }
 
-      await writeToFile(changelogLine);
+      success = await writeToFile(changelogLine);
 
       commentMessage= ":tada:  Updated the Unreleased section of the Changelog with: \n```\n".concat(changelogLine, "\n```\nTo update this entry, please comment on this PR, and describe in one line your changes, like so: [Feature] Updated **ComponentName** with new `propName` to fix alignment ");
 
@@ -164,7 +166,7 @@ async function main() {
     }
 
     // determines if the next action will run (add, commit, and push changelog.md)
-    core.setOutput("success", foundline);
+    core.setOutput("success", success);
   } catch (error) {
     core.setFailed(error.message);
   }
