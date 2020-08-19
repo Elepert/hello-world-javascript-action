@@ -102,7 +102,7 @@ async function main() {
       // check that this changelogLine isn't the same as the last comment's
       // if so, don't bother with a new comment
       if (lastComment.indexOf('```') !== -1) {
-        lastComment = lastComment.split("Changelog with:\n```\n")[1];
+        lastComment = lastComment.split("Changelog with: \n```\n")[1];
         lastComment = lastComment.split("\n```")[0];
         if (lastComment === changelogLine) { pushComment= false}
       }
