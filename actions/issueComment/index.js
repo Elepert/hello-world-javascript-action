@@ -12,17 +12,19 @@ async function writeToFile(changelogLine) {
   const path = "./CHANGELOG.md";
   const fileContents = readFileSync(path,'utf8');
 
-  // Parse through the changelog to find insertion point
-  const splitFile = fileContents.split("## Unreleased\n");
-  let finalContents = `${splitFile[0]}## Unreleased\n`;
+  if (fileContents.indexOf(changelogLine) === -1) {
+    // Parse through the changelog to find insertion point
+    const splitFile = fileContents.split("## Unreleased\n");
+    let finalContents = `${splitFile[0]}## Unreleased\n`;
 
-  // add the the changelogline
-  finalContents += changelogLine;
-  finalContents += "\n";
-  finalContents += splitFile[1];
+    // add the the changelogline
+    finalContents += changelogLine;
+    finalContents += "\n";
+    finalContents += splitFile[1];
 
-  // write to file
-  await writeFileAsync(path, finalContents);
+    // write to file
+    await writeFileAsync(path, finalContents);
+  }
 }
 
 async function writeToPRBody(prBody, changelogLine, octokit, owner, repo, prNum) {
