@@ -6,6 +6,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 This file is similar to the format suggested by [Keep a CHANGELOG](https://github.com/olivierlacan/keep-a-changelog).
 
 ## Unreleased
+- [Feature] Testing without a comment ([#8](https://github.com/Elepert/hello-world-javascript-action/pull/8))
+- [Patch] Final testing ([#8](https://github.com/Elepert/hello-world-javascript-action/pull/8))
+- [Feature] Let's override this ([#8](https://github.com/Elepert/hello-world-javascript-action/pull/8))
+- [Release] Testing again ([#8](https://github.com/Elepert/hello-world-javascript-action/pull/8))
+- [Patch] I want a different thing ([#8](https://github.com/Elepert/hello-world-javascript-action/pull/8))
 - [Feature] testline 4 ([#6](https://github.com/Elepert/hello-world-javascript-action/pull/6))
 - [Feature] test line 2 ([#6](https://github.com/Elepert/hello-world-javascript-action/pull/6))
 - [Patch] Test line ([#6](https://github.com/Elepert/hello-world-javascript-action/pull/6))
